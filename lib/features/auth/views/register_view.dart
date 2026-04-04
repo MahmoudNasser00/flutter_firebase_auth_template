@@ -53,13 +53,23 @@ class _RegisterViewState extends State<RegisterView> {
                   child: const Text("Register"),
                   onPressed: () async {
                     if (formKey.currentState!.validate()) {
-                      await FirebaseAuth.instance
-                          .createUserWithEmailAndPassword(
-                            email: email.text,
-                            password: password.text,
-                          );
+                      try {
+                        await FirebaseAuth.instance
+                            .createUserWithEmailAndPassword(
+                              email: email.text,
+                              password: password.text,
+                            );
 
-                      Navigator.pop(context);
+                        Navigator.pop(context);
+
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text("Account created")),
+                        );
+                      } catch (e) {
+                        ScaffoldMessenger.of(
+                          context,
+                        ).showSnackBar(SnackBar(content: Text(e.toString())));
+                      }
                     }
                   },
                 ),
