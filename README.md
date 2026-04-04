@@ -20,10 +20,8 @@ A professional, production-ready Flutter authentication starter template integra
     - Standardized lint rules.
     - Equatable for efficient object comparison.
 
-## 📸 Screenshots
+## Demo
 
-| Login       | Register    | Responsive View |
-|-------------|-------------|-----------------|
-| [Add Image] | [Add Image] | [Add Image]     |
+![App Demo Part 1](assets/Video_Player.gif)
 
 ## 🛠 Project Structure
