@@ -40,6 +40,7 @@ dependencies:
   flutter_bloc: ^9.1.1
   equatable: ^2.0.8
   font_awesome_flutter: 10.7.0
+  flutter_screenutil:
 
 dev_dependencies:
   flutter_test:

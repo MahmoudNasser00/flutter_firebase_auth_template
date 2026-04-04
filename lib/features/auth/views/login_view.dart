@@ -1,59 +1,70 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../core/utils/validators.dart';
-import '../../home/home_view.dart';
+
 import '../cubit/auth_cubit.dart';
+import '../cubit/auth_state.dart';
+import '../widgets/custom_button.dart';
 import '../widgets/password_field.dart';
-import '../widgets/social_buttons.dart';
+import '../widgets/social_login.dart';
+import 'home_view.dart';
 import 'register_view.dart';
 import 'forgot_password_view.dart';
 
-class LoginView extends StatefulWidget {
-  const LoginView({super.key});
+class LoginView extends StatelessWidget {
+  LoginView({super.key});
 
-  @override
-  State<LoginView> createState() => _LoginViewState();
-}
-
-class _LoginViewState extends State<LoginView> {
-  final formKey = GlobalKey<FormState>();
   final email = TextEditingController();
   final password = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(24),
-          child: Form(
-            key: formKey,
+    return BlocListener<AuthCubit, AuthState>(
+      listener: (context, state) {
+        if (state is AuthSuccess) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (_) => const HomeView()),
+          );
+        }
+
+        if (state is AuthError) {
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(state.message)));
+        }
+      },
+      child: Scaffold(
+        backgroundColor: Colors.black,
+        body: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24),
+          child: SingleChildScrollView(
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const SizedBox(height: 40),
+                const SizedBox(height: 120),
 
                 const Text(
-                  "Sign In",
-                  style: TextStyle(fontSize: 34, fontWeight: FontWeight.bold),
+                  "Welcome Back",
+
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 40,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
 
-                const SizedBox(height: 10),
+                const SizedBox(height: 60),
 
-                const Text(
-                  "Welcome back 👋",
-                  style: TextStyle(color: Colors.grey),
-                ),
-
-                const SizedBox(height: 40),
-
-                TextFormField(
+                TextField(
                   controller: email,
-                  validator: Validators.email,
-                  decoration: const InputDecoration(
-                    labelText: "Email",
-                    border: OutlineInputBorder(),
+                  style: const TextStyle(color: Colors.white),
+                  decoration: InputDecoration(
+                    hintText: "Email",
+                    hintStyle: const TextStyle(color: Colors.grey),
+                    filled: true,
+                    fillColor: const Color(0xFF1E1E1E),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
                   ),
                 ),
 
@@ -61,10 +72,11 @@ class _LoginViewState extends State<LoginView> {
 
                 PasswordField(controller: password),
 
+                const SizedBox(height: 10),
+
                 Align(
                   alignment: Alignment.centerRight,
                   child: TextButton(
-                    child: const Text("Forgot Password"),
                     onPressed: () {
                       Navigator.push(
                         context,
@@ -73,79 +85,48 @@ class _LoginViewState extends State<LoginView> {
                         ),
                       );
                     },
+                    child: const Text("Forgot Password"),
                   ),
                 ),
 
-                SizedBox(
-                  width: double.infinity,
-                  height: 50,
-                  child: ElevatedButton(
-                    child: const Text("Login"),
-                    onPressed: () async {
-                      if (formKey.currentState!.validate()) {
-                        try {
-                          await FirebaseAuth.instance
-                              .signInWithEmailAndPassword(
-                                email: email.text,
-                                password: password.text,
-                              );
+                const SizedBox(height: 10),
 
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(builder: (_) => const HomeView()),
-                          );
-                        } catch (e) {
-                          ScaffoldMessenger.of(
-                            context,
-                          ).showSnackBar(SnackBar(content: Text(e.toString())));
-                        }
-                      }
-                    },
-                  ),
+                CustomButton(
+                  text: "Sign in",
+                  onPressed: () {
+                    context.read<AuthCubit>().login(email.text, password.text);
+                  },
                 ),
-
                 const SizedBox(height: 30),
 
-                const Row(
-                  children: [
-                    Expanded(child: Divider()),
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 8),
-                      child: Text("OR"),
-                    ),
-                    Expanded(child: Divider()),
-                  ],
+                const Text(
+                  "Or continue with",
+                  style: TextStyle(color: Colors.white70),
                 ),
 
+                const SizedBox(height: 10),
+
+                const SocialLogin(),
                 const SizedBox(height: 20),
-
-                SocialButtons(
-                  onGoogle: () {
-                    context.read<AuthCubit>().googleLogin();
-                    print("Google login pressed");
-                  },
-
-                  onApple: () {
-                    context.read<AuthCubit>().googleLogin();
-                    print("Apple login pressed");
-                  },
-                ),
-                const Spacer(),
 
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Text("Don't have account?"),
-                    TextButton(
-                      child: const Text("Register"),
-                      onPressed: () {
+                    const Text(
+                      "Don't have an account? ",
+                      style: TextStyle(color: Colors.white70),
+                    ),
+                    GestureDetector(
+                      onTap: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(
-                            builder: (_) => const RegisterView(),
-                          ),
+                          MaterialPageRoute(builder: (_) => RegisterView()),
                         );
                       },
+                      child: const Text(
+                        "Sign Up",
+                        style: TextStyle(color: Colors.white),
+                      ),
                     ),
                   ],
                 ),

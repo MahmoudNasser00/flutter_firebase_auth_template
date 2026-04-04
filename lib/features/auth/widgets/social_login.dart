@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../cubit/auth_cubit.dart';
@@ -8,13 +7,19 @@ class SocialLogin extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        const SizedBox(height: 20),
-        const Text("Or continue with"),
-        const SizedBox(height: 10),
         IconButton(
-          icon: const Icon(Icons.g_mobiledata, size: 40),
+          icon: const Icon(Icons.facebook, color: Colors.white),
+          onPressed: () {},
+        ),
+        IconButton(
+          icon: const Icon(Icons.apple, color: Colors.white),
+          onPressed: () {},
+        ),
+        IconButton(
+          icon: const Icon(Icons.g_mobiledata, color: Colors.white),
           onPressed: () {
             context.read<AuthCubit>().googleLogin();
           },
