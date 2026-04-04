@@ -1,17 +1,29 @@
-# flutter_firebase_auth_template
+# Flutter Firebase Auth Template
 
-A new Flutter project.
+A professional, production-ready Flutter authentication starter template integrated with Firebase. Built using Clean Architecture principles and BLoC for state management.
 
-## Getting Started
+## 🚀 Features
 
-This project is a starting point for a Flutter application.
+- **Firebase Authentication:**
+    - Email & Password Sign up / Sign in.
+    - Google Sign-In integration.
+    - Password visibility toggling & validation.
+- **Architecture & State Management:**
+    - **BLoC (Business Logic Component):** Clean separation of UI and logic.
+    - **Feature-based structure:** Scalable directory organization (`lib/features`, `lib/core`).
+    - **Repository Pattern:** Abstracted data layer for better testability.
+- **UI & UX:**
+    - **Responsive Design:** Uses `flutter_screenutil` and custom responsive utilities to work on all screen sizes.
+    - **Custom Widgets:** Reusable buttons, text fields, and social login components.
+    - **FontAwesome Icons:** Professional social icons integration.
+- **Code Quality:**
+    - Standardized lint rules.
+    - Equatable for efficient object comparison.
 
-A few resources to get you started if this is your first Flutter project:
+## 📸 Screenshots
 
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
+| Login | Register | Responsive View |
+|-------|----------|-----------------|
+| [Add Image] | [Add Image] | [Add Image] |
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## 🛠 Project Structure
