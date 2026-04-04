@@ -22,59 +22,61 @@ class _RegisterViewState extends State<RegisterView> {
         padding: const EdgeInsets.all(24),
         child: Form(
           key: formKey,
-          child: Column(
-            children: [
-              TextFormField(
-                controller: email,
-                validator: Validators.email,
-                decoration: const InputDecoration(
-                  labelText: "Email",
-                  border: OutlineInputBorder(),
+          child: Center(
+            child: Column(
+              mainAxisSize: .max,
+              mainAxisAlignment: .center,
+              crossAxisAlignment: .center,
+              spacing: 25,
+              children: [
+                TextFormField(
+                  controller: email,
+                  validator: Validators.email,
+                  decoration: const InputDecoration(
+                    labelText: "Email",
+                    border: OutlineInputBorder(),
+                  ),
                 ),
-              ),
 
-              const SizedBox(height: 16),
-
-              TextFormField(
-                controller: password,
-                validator: Validators.password,
-                decoration: const InputDecoration(
-                  labelText: "Password",
-                  border: OutlineInputBorder(),
+                TextFormField(
+                  controller: password,
+                  validator: Validators.password,
+                  decoration: const InputDecoration(
+                    labelText: "Password",
+                    border: OutlineInputBorder(),
+                  ),
                 ),
-              ),
 
-              const SizedBox(height: 20),
+                SizedBox(
+                  width: double.infinity,
+                  height: 50,
+                  child: ElevatedButton(
+                    child: const Text("Register"),
+                    onPressed: () async {
+                      if (formKey.currentState!.validate()) {
+                        try {
+                          await FirebaseAuth.instance
+                              .createUserWithEmailAndPassword(
+                                email: email.text,
+                                password: password.text,
+                              );
 
-              SizedBox(
-                width: double.infinity,
-                height: 50,
-                child: ElevatedButton(
-                  child: const Text("Register"),
-                  onPressed: () async {
-                    if (formKey.currentState!.validate()) {
-                      try {
-                        await FirebaseAuth.instance
-                            .createUserWithEmailAndPassword(
-                              email: email.text,
-                              password: password.text,
-                            );
+                          Navigator.pop(context);
 
-                        Navigator.pop(context);
-
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text("Account created")),
-                        );
-                      } catch (e) {
-                        ScaffoldMessenger.of(
-                          context,
-                        ).showSnackBar(SnackBar(content: Text(e.toString())));
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text("Account created")),
+                          );
+                        } catch (e) {
+                          ScaffoldMessenger.of(
+                            context,
+                          ).showSnackBar(SnackBar(content: Text(e.toString())));
+                        }
                       }
-                    }
-                  },
+                    },
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
