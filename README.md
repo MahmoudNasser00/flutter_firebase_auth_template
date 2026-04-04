@@ -22,8 +22,8 @@ A professional, production-ready Flutter authentication starter template integra
 
 ## 📸 Screenshots
 
-| Login | Register | Responsive View |
-|-------|----------|-----------------|
-| [Add Image] | [Add Image] | [Add Image] |
+| Login       | Register    | Responsive View |
+|-------------|-------------|-----------------|
+| [Add Image] | [Add Image] | [Add Image]     |
 
 ## 🛠 Project Structure
