@@ -1,10 +1,11 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import '../../../core/widgets/custom_button.dart';
+import '../../../core/utils/validators.dart';
+import '../../home/home_view.dart';
 import '../cubit/auth_cubit.dart';
-import '../cubit/auth_state.dart';
-import '../widgets/social_login.dart';
+import '../widgets/password_field.dart';
+import '../widgets/social_buttons.dart';
 import 'register_view.dart';
 import 'forgot_password_view.dart';
 
@@ -16,6 +17,7 @@ class LoginView extends StatefulWidget {
 }
 
 class _LoginViewState extends State<LoginView> {
+  final formKey = GlobalKey<FormState>();
   final email = TextEditingController();
   final password = TextEditingController();
 
@@ -25,130 +27,130 @@ class _LoginViewState extends State<LoginView> {
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(24),
-          child: BlocConsumer<AuthCubit, AuthState>(
-            listener: (context, state) {
-              if (state is AuthSuccess) {
-                ScaffoldMessenger.of(
-                  context,
-                ).showSnackBar(const SnackBar(content: Text("Login Success")));
-              }
+          child: Form(
+            key: formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: 40),
 
-              if (state is AuthError) {
-                ScaffoldMessenger.of(
-                  context,
-                ).showSnackBar(SnackBar(content: Text(state.message)));
-              }
-            },
+                const Text(
+                  "Sign In",
+                  style: TextStyle(fontSize: 34, fontWeight: FontWeight.bold),
+                ),
 
-            builder: (context, state) {
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SizedBox(height: 40),
+                const SizedBox(height: 10),
 
-                  const Text(
-                    "Sign in",
-                    style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
+                const Text(
+                  "Welcome back 👋",
+                  style: TextStyle(color: Colors.grey),
+                ),
+
+                const SizedBox(height: 40),
+
+                TextFormField(
+                  controller: email,
+                  validator: Validators.email,
+                  decoration: const InputDecoration(
+                    labelText: "Email",
+                    border: OutlineInputBorder(),
                   ),
+                ),
 
-                  const SizedBox(height: 10),
+                const SizedBox(height: 16),
 
-                  const Text(
-                    "Welcome back 👋",
-                    style: TextStyle(fontSize: 16, color: Colors.grey),
+                PasswordField(controller: password),
+
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: TextButton(
+                    child: const Text("Forgot Password"),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const ForgotPasswordView(),
+                        ),
+                      );
+                    },
                   ),
+                ),
 
-                  const SizedBox(height: 40),
+                SizedBox(
+                  width: double.infinity,
+                  height: 50,
+                  child: ElevatedButton(
+                    child: const Text("Login"),
+                    onPressed: () async {
+                      if (formKey.currentState!.validate()) {
+                        try {
+                          await FirebaseAuth.instance
+                              .signInWithEmailAndPassword(
+                                email: email.text,
+                                password: password.text,
+                              );
 
-                  TextField(
-                    controller: email,
-                    decoration: const InputDecoration(
-                      labelText: "Email",
-                      border: OutlineInputBorder(),
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(builder: (_) => const HomeView()),
+                          );
+                        } catch (e) {
+                          ScaffoldMessenger.of(
+                            context,
+                          ).showSnackBar(SnackBar(content: Text(e.toString())));
+                        }
+                      }
+                    },
+                  ),
+                ),
+
+                const SizedBox(height: 30),
+
+                const Row(
+                  children: [
+                    Expanded(child: Divider()),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 8),
+                      child: Text("OR"),
                     ),
-                  ),
+                    Expanded(child: Divider()),
+                  ],
+                ),
 
-                  const SizedBox(height: 16),
+                const SizedBox(height: 20),
 
-                  TextField(
-                    controller: password,
-                    obscureText: true,
-                    decoration: const InputDecoration(
-                      labelText: "Password",
-                      border: OutlineInputBorder(),
-                    ),
-                  ),
+                SocialButtons(
+                  onGoogle: () {
+                    context.read<AuthCubit>().googleLogin();
+                    print("Google login pressed");
+                  },
 
-                  const SizedBox(height: 10),
+                  onApple: () {
+                    context.read<AuthCubit>().googleLogin();
+                    print("Apple login pressed");
+                  },
+                ),
+                const Spacer(),
 
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: TextButton(
-                      child: const Text("Forgot Password"),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text("Don't have account?"),
+                    TextButton(
+                      child: const Text("Register"),
                       onPressed: () {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (_) => const ForgotPasswordView(),
+                            builder: (_) => const RegisterView(),
                           ),
                         );
                       },
                     ),
-                  ),
-
-                  const SizedBox(height: 10),
-
-                  CustomButton(
-                    text: "Login",
-                    loading: state is AuthLoading,
-                    onPressed: () {
-                      context.read<AuthCubit>().login(
-                        email.text,
-                        password.text,
-                      );
-                    },
-                  ),
-
-                  const SizedBox(height: 30),
-
-                  const Row(
-                    children: [
-                      Expanded(child: Divider()),
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 10),
-                        child: Text("OR"),
-                      ),
-                      Expanded(child: Divider()),
-                    ],
-                  ),
-
-                  const SizedBox(height: 20),
-
-                  const SocialLogin(),
-
-                  const Spacer(),
-
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Text("Don't have an account?"),
-
-                      TextButton(
-                        child: const Text("Register"),
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => const RegisterView(),
-                            ),
-                          );
-                        },
-                      ),
-                    ],
-                  ),
-                ],
-              );
-            },
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),

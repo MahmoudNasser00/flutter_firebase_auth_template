@@ -1,9 +1,6 @@
-
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-
-import '../../../core/widgets/custom_button.dart';
-import '../cubit/auth_cubit.dart';
+import '../../../core/utils/validators.dart';
 
 class RegisterView extends StatefulWidget {
   const RegisterView({super.key});
@@ -13,6 +10,7 @@ class RegisterView extends StatefulWidget {
 }
 
 class _RegisterViewState extends State<RegisterView> {
+  final formKey = GlobalKey<FormState>();
   final email = TextEditingController();
   final password = TextEditingController();
 
@@ -22,29 +20,52 @@ class _RegisterViewState extends State<RegisterView> {
       appBar: AppBar(title: const Text("Register")),
       body: Padding(
         padding: const EdgeInsets.all(24),
-        child: Column(
-          children: [
-            TextField(
-              controller: email,
-              decoration: const InputDecoration(labelText: "Email"),
-            ),
-            const SizedBox(height: 10),
-            TextField(
-              controller: password,
-              obscureText: true,
-              decoration: const InputDecoration(labelText: "Password"),
-            ),
-            const SizedBox(height: 20),
-            CustomButton(
-              text: "Register",
-              onPressed: () {
-                context.read<AuthCubit>().register(
-                      email.text,
-                      password.text,
-                    );
-              },
-            ),
-          ],
+        child: Form(
+          key: formKey,
+          child: Column(
+            children: [
+              TextFormField(
+                controller: email,
+                validator: Validators.email,
+                decoration: const InputDecoration(
+                  labelText: "Email",
+                  border: OutlineInputBorder(),
+                ),
+              ),
+
+              const SizedBox(height: 16),
+
+              TextFormField(
+                controller: password,
+                validator: Validators.password,
+                decoration: const InputDecoration(
+                  labelText: "Password",
+                  border: OutlineInputBorder(),
+                ),
+              ),
+
+              const SizedBox(height: 20),
+
+              SizedBox(
+                width: double.infinity,
+                height: 50,
+                child: ElevatedButton(
+                  child: const Text("Register"),
+                  onPressed: () async {
+                    if (formKey.currentState!.validate()) {
+                      await FirebaseAuth.instance
+                          .createUserWithEmailAndPassword(
+                            email: email.text,
+                            password: password.text,
+                          );
+
+                      Navigator.pop(context);
+                    }
+                  },
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

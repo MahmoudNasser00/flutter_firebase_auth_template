@@ -1,9 +1,5 @@
-
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-
-import '../../../core/widgets/custom_button.dart';
-import '../cubit/auth_cubit.dart';
 
 class ForgotPasswordView extends StatefulWidget {
   const ForgotPasswordView({super.key});
@@ -25,14 +21,29 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
           children: [
             TextField(
               controller: email,
-              decoration: const InputDecoration(labelText: "Email"),
+              decoration: const InputDecoration(
+                labelText: "Email",
+                border: OutlineInputBorder(),
+              ),
             ),
+
             const SizedBox(height: 20),
-            CustomButton(
-              text: "Send Reset Link",
-              onPressed: () {
-                context.read<AuthCubit>().forgotPassword(email.text);
-              },
+
+            SizedBox(
+              width: double.infinity,
+              height: 50,
+              child: ElevatedButton(
+                child: const Text("Send Reset Email"),
+                onPressed: () async {
+                  await FirebaseAuth.instance.sendPasswordResetEmail(
+                    email: email.text,
+                  );
+
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text("Reset email sent")),
+                  );
+                },
+              ),
             ),
           ],
         ),
