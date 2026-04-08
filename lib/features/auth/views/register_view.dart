@@ -42,9 +42,10 @@ class _RegisterViewState extends State<RegisterView> {
     return BlocListener<AuthCubit, AuthState>(
       listener: (context, state) {
         if (state is AuthSuccess) {
-          Navigator.pushReplacement(
+          Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(builder: (_) => const HomeView()),
+            (route) => false,
           );
         }
 
