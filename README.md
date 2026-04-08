@@ -23,6 +23,5 @@ A professional, production-ready Flutter authentication starter template integra
 ## Demo
 
 ![App Demo Part 1](assets/Video_Player.gif)
-![App Demo Part 2](assets/Video_Player1.gif)
 
 ## 🛠 Project Structure
