@@ -1,27 +1,116 @@
 # Flutter Firebase Auth Template
 
-A professional, production-ready Flutter authentication starter template integrated with Firebase. Built using Clean Architecture principles and BLoC for state management.
+Production-ready Flutter starter template for authentication with Firebase, built with a feature-first structure and BLoC state management.
 
-## 🚀 Features
+## ✨ What this template includes
 
-- **Firebase Authentication:**
-    - Email & Password Sign up / Sign in.
-    - Google Sign-In integration.
-    - Password visibility toggling & validation.
-- **Architecture & State Management:**
-    - **BLoC (Business Logic Component):** Clean separation of UI and logic.
-    - **Feature-based structure:** Scalable directory organization (`lib/features`, `lib/core`).
-    - **Repository Pattern:** Abstracted data layer for better testability.
-- **UI & UX:**
-    - **Responsive Design:** Uses `flutter_screenutil` and custom responsive utilities to work on all screen sizes.
-    - **Custom Widgets:** Reusable buttons, text fields, and social login components.
-    - **FontAwesome Icons:** Professional social icons integration.
-- **Code Quality:**
-    - Standardized lint rules.
-    - Equatable for efficient object comparison.
+- Email/password authentication (sign up, sign in, reset password).
+- Google Sign-In.
+- Auth gate using `FirebaseAuth.instance.authStateChanges()`.
+- User profile screen backed by Cloud Firestore.
+- Edit profile flow (name, phone, image).
+- Image picking from gallery.
+- Image upload support via Cloudinary.
+- Reusable auth UI components and responsive helpers.
 
-## Demo
+## 🧱 Tech stack
+
+- **Flutter** + **Dart**
+- **Firebase Core / Auth / Firestore / Storage**
+- **flutter_bloc** + **equatable**
+- **google_sign_in**
+- **image_picker**
+- **cloudinary_public**
+- **flutter_screenutil**
+
+## 📁 Project structure
+
+```text
+lib/
+  core/
+    responsive/
+    services/
+    utils/
+    widgets/
+  features/
+    auth/
+      cubit/
+      data/
+      domain/
+      views/
+      widgets/
+    models/
+```
+
+## 🚀 Getting started
+
+### 1) Prerequisites
+
+- Flutter SDK installed.
+- A Firebase project.
+- Android Studio / Xcode for platform setup.
+
+### 2) Clone and install dependencies
+
+```bash
+git clone <your-repo-url>
+cd flutter_firebase_auth_template
+flutter pub get
+```
+
+### 3) Configure Firebase
+
+This template initializes Firebase using:
+
+```dart
+await Firebase.initializeApp();
+```
+
+So you need to configure platform files manually (or with FlutterFire CLI), including:
+
+- `android/app/google-services.json`
+- `ios/Runner/GoogleService-Info.plist`
+
+And make sure Firebase is correctly wired in Android/iOS build files.
+
+### 4) Enable auth providers in Firebase Console
+
+- Email/Password
+- Google
+
+### 5) Firestore setup
+
+Create a `users` collection with document IDs equal to authenticated `uid`. Example fields used in the app:
+
+- `name` (string)
+- `phone` (string)
+- `email` (string)
+- `image` (string URL)
+
+### 6) Cloudinary setup (for profile image upload)
+
+Update Cloudinary credentials before using uploads:
+
+- `cloud_name`
+- `upload_preset`
+
+> Current placeholders exist in `edit_profile_view.dart`; replace them with your actual values.
+
+### 7) Run the app
+
+```bash
+flutter run
+```
+
+## 🧪 Useful commands
+
+```bash
+flutter analyze
+flutter test
+```
+
+## 🎬 Demo
 
 ![App Demo Part 1](assets/Video_Player.gif)
+![App Demo Part 2](assets/Video_Player1.gif)
 
-## 🛠 Project Structure
