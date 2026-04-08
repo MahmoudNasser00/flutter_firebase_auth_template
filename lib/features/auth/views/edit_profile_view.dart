@@ -1,9 +1,12 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloudinary_public/cloudinary_public.dart';
+
+import '../cubit/auth_cubit.dart';
 
 class EditProfileView extends StatefulWidget {
   const EditProfileView({super.key});
@@ -71,7 +74,11 @@ class _EditProfileViewState extends State<EditProfileView> {
 
   /// update profile
   Future updateProfile() async {
-    String? imageUrl = await uploadImage();
+    String? imageUrl;
+
+    if (image != null) {
+      imageUrl = await context.read<AuthCubit>().uploadImage(image!);
+    }
 
     final data = {"name": name.text, "phone": phone.text};
 
